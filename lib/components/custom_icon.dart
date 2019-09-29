@@ -1,3 +1,4 @@
+import 'package:bmi_calculator/constants.dart';
 import 'package:flutter/material.dart';
 
 class CustomIcons extends StatelessWidget {
@@ -10,7 +11,7 @@ class CustomIcons extends StatelessWidget {
     return Icon(
       icon,
       color: Colors.white,
-      size: 80,
+      size: kGenderIconSize.toDouble(),
     );
   }
 }

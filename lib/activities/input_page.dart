@@ -1,7 +1,10 @@
+import 'package:bmi_calculator/activities/result_page.dart';
+import 'package:bmi_calculator/components/bottom_button.dart';
 import 'package:bmi_calculator/components/custom_button.dart';
 import 'package:bmi_calculator/components/custom_cards.dart';
 import 'package:bmi_calculator/components/custom_icon.dart';
 import 'package:bmi_calculator/constants.dart';
+import 'package:bmi_calculator/models/bmi_brain.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -22,24 +25,18 @@ class _InputPageState extends State<InputPage> {
     });
   }
 
-  void maleCardBackgroundChange() {
-    setState(() {
-      maleCardColor = maleCardColor == kCardInactiveColor
-          ? kCardActiveColor
-          : kCardInactiveColor;
-    });
-  }
+  void maleCardBackgroundChange() {}
 
-  int height = 120;
-  int weight = 54;
-  int age = 21;
+  static int height = 120;
+  static int weight = 54;
+  static int age = 21;
+
+  Brain brain;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('BMI CALCULATOR'),
-      ),
+      appBar: kAppBar,
       body: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: <Widget>[
@@ -67,7 +64,12 @@ class _InputPageState extends State<InputPage> {
                       ],
                     ),
                     onTap: () {
-                      maleCardBackgroundChange();
+                      setState(() {
+                        maleCardColor = maleCardColor == kCardInactiveColor
+                            ? kCardActiveColor
+                            : kCardInactiveColor;
+                        femaleCardColor = kCardInactiveColor;
+                      });
                     },
                   ),
                 ),
@@ -78,7 +80,7 @@ class _InputPageState extends State<InputPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         CustomIcons(
-                          icon: FontAwesomeIcons.mars,
+                          icon: FontAwesomeIcons.venus,
                         ),
                         SizedBox(
                           height: 10,
@@ -90,7 +92,12 @@ class _InputPageState extends State<InputPage> {
                       ],
                     ),
                     onTap: () {
-                      femaleCardBackgroundChange();
+                      setState(() {
+                        femaleCardColor = femaleCardColor == kCardInactiveColor
+                            ? kCardActiveColor
+                            : kCardInactiveColor;
+                        maleCardColor = kCardInactiveColor;
+                      });
                     },
                   ),
                 ),
@@ -235,16 +242,24 @@ class _InputPageState extends State<InputPage> {
           ),
           Expanded(
             flex: 1,
-            child: Container(
-              color: kSliderThumbAndCalculateColor,
-              margin: EdgeInsets.only(top: 10),
-              child: Center(
-                child: Text(
-                  "CALCULATE",
-                  style: kCalculateButtonTextStyle,
-                ),
+            child: GestureDetector(
+              onTap: () {
+                setState(() {
+                  brain = Brain(height, weight, age);
+                  brain.calculate();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => ResultPage(
+                        brain: brain,
+                      ),
+                    ),
+                  );
+                });
+              },
+              child: BottonButton(
+                text: "CALCULATE",
               ),
-              width: double.infinity,
             ),
           )
         ],
